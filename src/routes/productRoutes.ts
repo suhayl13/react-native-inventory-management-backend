@@ -1,9 +1,10 @@
 import express, {Router} from "express";
-import {importShopifyProducts, getProductDetailsFromBarcode} from "../controllers/productControllers";
+import {importShopifyProducts, getProductDetailsFromBarcode, getBarcodeDetailsOfProducts} from "../controllers/productControllers";
 
-const router: Router = express.Router()
+const router: Router = express.Router();
 
-router.get("/import", importShopifyProducts)
-router.get("/product/:barcode", getProductDetailsFromBarcode)
+router.get("/import", importShopifyProducts);
+router.get("/products", getBarcodeDetailsOfProducts)
+router.get("/products/:barcode", getProductDetailsFromBarcode);
 
 export default router;

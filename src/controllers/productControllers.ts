@@ -131,3 +131,21 @@ export async function getProductDetailsFromBarcode(req: Request<{barcode:string}
   }
   
 }
+
+export async function getBarcodeDetailsOfProducts(req: Request, res: Response) {
+  const ids = (<string> req.query.ids)?.split(",") || [];
+
+  if (!ids.length) {
+    return res.status(400).json({ error: "No IDs provided." });
+  }
+
+  const products = await sql`
+    SELECT barcode, name, variant_name
+    FROM products
+    WHERE barcode = ANY(${ids})
+  `
+    res.status(200).json(products.map(p => ({
+      barcode: p.barcode,
+      label: `${p.name}-${p.variant_name}`
+    })))
+}
