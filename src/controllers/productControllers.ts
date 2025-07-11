@@ -120,8 +120,14 @@ export async function importShopifyProducts(_req: Request, res: Response) {
   }
 }
 
-export async function getProductDetailsFromBarcode(req: Request, res: Response) {
-  const { barcode:string } = req.params
-
+export async function getProductDetailsFromBarcode(req: Request<{barcode:string}>, res: Response) {
+  try {
+    const { barcode } = req.params
+    const transactions = await sql`SELECT * FROM products WHERE barcode = ${barcode}`
+    res.status(200).json(transactions[0])
+  } catch (error) {
+      res.status(500).json({message: "Internal Server Error!!!"})
+      console.log(error)
+  }
   
 }
