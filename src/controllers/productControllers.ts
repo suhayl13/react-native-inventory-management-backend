@@ -149,3 +149,20 @@ export async function getBarcodeDetailsOfProducts(req: Request, res: Response) {
       label: `${p.name}-${p.variant_name}`
     })))
 }
+
+export async function getBarcodeDetailsOfAllProducts(req: Request, res: Response) {
+  const limit = Number(req.query.limit || 100);
+  const offset = Number(req.query.offset || 0);
+
+  const products = await sql`
+    SELECT barcode, name, variant_name
+    FROM products
+    ORDER BY created_at
+    LIMIT ${limit}
+    OFFSET ${offset}
+  `
+  res.status(200).json(products.map(p => ({
+    barcode: p.barcode,
+    label: `${p.name} - ${p.variant_name}`,
+  })));
+}
